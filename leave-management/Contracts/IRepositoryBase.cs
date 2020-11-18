@@ -11,6 +11,7 @@ namespace leave_management.Contracts
 
         T FindById(int Id);
 
+        bool isExists(int id);
         bool Create(T entity);
         bool Update(T entity);
         bool Delete(T entity);
