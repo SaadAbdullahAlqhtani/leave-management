@@ -6,8 +6,8 @@ using leave_management.Data;
 
 namespace leave_management.Contracts
 {
-    public interface ILeaveHistoryRepository : IRepositoryBase<LeaveHistory>
+    public interface ILeaveRequestRepository : IRepositoryBase<LeaveRequest>
     {
-        ICollection<LeaveHistory> GetEmployeesByLeaveHistories(int Id);
+        ICollection<LeaveRequest> GetLeaveRequestsByEmployee(string employeeid);
     }
 }
