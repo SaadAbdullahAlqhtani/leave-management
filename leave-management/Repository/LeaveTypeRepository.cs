@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using leave_management.Contracts;
 using leave_management.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace leave_management.Repository
 {
@@ -17,52 +18,47 @@ namespace leave_management.Repository
             _db = db;
         }
 
-
-        public ICollection<LeaveType> FindAll()
+        public async Task<bool> Create(LeaveType entity)
         {
-            var leaveTypes = _db.LeaveTypes.ToList();
+            await _db.LeaveTypes.AddAsync(entity);
+            return await Save();
+        }
+
+        public async Task<bool> Delete(LeaveType entity)
+        {
+            _db.LeaveTypes.Remove(entity);
+            return await Save();
+        }
+
+        public async Task<ICollection<LeaveType>> FindAll()
+        {
+            var leaveTypes = await _db.LeaveTypes.ToListAsync();
             return leaveTypes;
         }
 
-        public LeaveType FindById(int Id)
+        public async Task<LeaveType> FindById(int id)
         {
-            var leaveType = _db.LeaveTypes.Find(Id);
+            var leaveType = await _db.LeaveTypes.FindAsync(id);
             return leaveType;
         }
 
-        public bool isExists(int id)
+
+        public async Task<bool> isExists(int id)
         {
-            var exists = _db.LeaveTypes.Any(q => q.Id == id);
+            var exists = await _db.LeaveTypes.AnyAsync(q => q.Id == id);
             return exists;
         }
 
-        public bool Create(LeaveType entity)
+        public async Task<bool> Save()
         {
-            _db.LeaveTypes.Add(entity);
-            return Save();
+            var changes = await _db.SaveChangesAsync();
+            return changes > 0;
         }
 
-        public bool Update(LeaveType entity)
+        public async Task<bool> Update(LeaveType entity)
         {
             _db.LeaveTypes.Update(entity);
-            return Save();
-        }
-
-        public bool Delete(LeaveType entity)
-        {
-            _db.LeaveTypes.Remove(entity);
-            return Save();
-        }
-
-        public bool Save()
-        {
-           var changes =  _db.SaveChanges();
-           return changes > 0 ;
-        }
-
-        public ICollection<LeaveType> GetEmployeesByLeaveTypes(int Id)
-        {
-            throw new Exception();
+            return await Save();
         }
     }
 }
